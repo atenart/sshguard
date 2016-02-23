@@ -117,6 +117,13 @@ You can inspect the contents of the table using::
 
     # ipfw table 22 list
 
+nft
+^^^
+
+SSHGuard creates and maintains an input chain. To inspect the chain rules::
+
+    # nft list table inet sshguard input
+
 netfilter/iptables
 ^^^^^^^^^^^^^^^^^^
 Create a chain for SSHGuard::

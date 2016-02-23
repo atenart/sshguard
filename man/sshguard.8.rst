@@ -42,7 +42,8 @@ DESCRIPTION
 ===========
 **sshguard** protects hosts from brute-force attacks against SSH and other
 services. It aggregates system logs and blocks repeat offenders using one of
-several firewall backends, including ``iptables``, ``ipfw``, and ``pf``.
+several firewall backends, including ``iptables``, ``ipfw``, ``nft`` and
+``pf``.
 
 **sshguard** can read log messages from standard input (suitable for piping
 from ``syslog``) or monitor one or more log files. Log messages are parsed,

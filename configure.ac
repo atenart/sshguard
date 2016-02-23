@@ -10,7 +10,7 @@ AM_SILENT_RULES([yes])
 # Configuration Options
 
 AC_ARG_WITH([firewall], [AS_HELP_STRING([--with-firewall=fw],
-            [Firewall backend (one of pf, ipfw, iptables, ipfilter, hosts, aix, or null)])],
+            [Firewall backend (one of pf, ipfw, iptables, ipfilter, nft, hosts, aix, or null)])],
 [
  FWALLSDIR="src/fwalls"
  case "$withval" in
@@ -76,6 +76,18 @@ AC_ARG_WITH([firewall], [AS_HELP_STRING([--with-firewall=fw],
             AC_MSG_WARN([pfctl program not in path! Using /sbin as default unless --with-pfctl specified])
         fi
         ;;
+     nft)
+        cp $FWALLSDIR/command_nft.h $FWALLSDIR/command.h
+        usenft=true
+        # is nft in PATH ?
+        AC_CHECK_PROG([nftpath], [nft])
+        if test x$nftpath = x
+        then
+            # if nft is not in PATH, use "/usr/sbin" as default path
+            nftpath=/usr/sbin
+            AC_MSG_WARN([nft program not in path! Using /usr/sbin as default unless --with-nft specified])
+        fi
+        ;;
      null)
         cp $FWALLSDIR/command_null.h $FWALLSDIR/command.h
         usenull=true
@@ -118,6 +130,10 @@ AC_ARG_WITH([iptables], [AS_HELP_STRING([--with-iptables=path],
 AC_ARG_WITH([pfctl], [AS_HELP_STRING([--with-pfctl=path],
             [Path to the pfctl command (default from PATH)])],
             [pfctlpath=`dirname $withval`])
+
+AC_ARG_WITH([nft], [AS_HELP_STRING([--with-nft=path],
+            [Path to the nft command (default from PATH)])],
+            [nftpath=`dirname $withval`])
 
 ##############################################################################
 AS_BOX([Program Checks])
@@ -171,6 +187,8 @@ AM_CONDITIONAL(FWALL_IPFW, test x$useipfw = xtrue)
 AM_CONDITIONAL(FWALL_IPTABLES, test x$useiptables = xtrue)
 # PF chosen
 AM_CONDITIONAL(FWALL_PF, test x$usepf = xtrue)
+# NFT chosen
+AM_CONDITIONAL(FWALL_NFT, test x$usenft = xtrue)
 # NULL chosen
 AM_CONDITIONAL(FWALL_NULL, test x$usenull = xtrue)
 
@@ -189,6 +207,8 @@ AC_DEFINE_UNQUOTED(IPFPATH, "$ipfpath", [path for the ipf command])
 # define $pfctlpath in config.h
 AC_DEFINE_UNQUOTED(PFCTL_PATH, "$pfctlpath", [path for the pfctl command])
 # define a suitable "grep -E" in config.h
+# define $nftpath in config.h
+AC_DEFINE_UNQUOTED(NFT_PATH, "$nftpath", [path for the nft command])
 AC_DEFINE_UNQUOTED(EGREP, $EGREP, [path and filename for a grep tool supporting -E])
 # define a suitable awk
 AC_DEFINE_UNQUOTED(AWK, $AWK, [path and filename for a suitable awk tool])

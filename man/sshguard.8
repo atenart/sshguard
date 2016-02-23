@@ -68,7 +68,8 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .sp
 \fBsshguard\fP protects hosts from brute\-force attacks against SSH and other
 services. It aggregates system logs and blocks repeat offenders using one of
-several firewall backends, including \fBiptables\fP, \fBipfw\fP, and \fBpf\fP\&.
+several firewall backends, including \fBiptables\fP, \fBipfw\fP, \fBnft\fP and
+\fBpf\fP\&.
 .sp
 \fBsshguard\fP can read log messages from standard input (suitable for piping
 from \fBsyslog\fP) or monitor one or more log files. Log messages are parsed,

@@ -5,12 +5,13 @@ noinst_HEADERS = \
 	command_ipfilter.h \
 	command_ipfw.h \
 	command_iptables.h \
+	command_nft.h \
 	command_null.h \
 	command_pf.h
 
 if FWALL_HOSTS
 libfwall_a_SOURCES = hosts.c
 else
-# FWALL_AIX, FWALL_IPFILTER, FWALL_IPTABLES, FWALL_PF, FWALL_NULL
+# FWALL_AIX, FWALL_IPFILTER, FWALL_IPTABLES, FWALL_PF, FWALL_NFT, FWALL_NULL
 libfwall_a_SOURCES = command.c
 endif
