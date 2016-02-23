@@ -76,6 +76,10 @@ IPV4MAPPED6 ((:(:0{1,4}){0,4}|0{1,4}:(:0{1,4}){1,3}|(0{1,4}:){2}(0{1,4}:0{0,4}:0
 
 HOSTADDR    localhost|([-a-zA-Z0-9]+\.)+[a-zA-Z]+|{IPV4}|{IPV6}|{IPV4MAPPED6}
 FACLEVEL    (<[a-zA-Z0-9]+\.[a-zA-Z0-9]+>)
+FACILITY    auth|authpriv|cron|daemon|ftp|kern|lpr|mail|mark|news|security|syslog|user|uucp|local[0-7]
+PRIORITY    alert|crit|debug|emerg|err|error|info|none|notice|panic|warn|warning
+RFC3164     {FACILITY}\.{PRIORITY}
+
 
 %%
 
@@ -89,13 +93,13 @@ FACLEVEL    (<[a-zA-Z0-9]+\.[a-zA-Z0-9]+>)
   */
 
  /* handle entries with PID and without PID from processes other than sshguard */
-({TIMESTAMP_SYSLOG}|{TIMESTAMP_ISO8601})[ ]+{FACLEVEL}?[ ]*([a-zA-Z0-9]|{WORD}|{HOSTADDR})[ ]+{PROCESSNAME}("/"{PROCESSNAME})?"["{NUMBER}"]: "{SOLARIS_MSGID_TAG}? {
+({TIMESTAMP_SYSLOG}|{TIMESTAMP_ISO8601})[ ]+{FACLEVEL}?[ ]*([a-zA-Z0-9]|{WORD}|{HOSTADDR})[ ]+{RFC3164}?[ ]*{PROCESSNAME}("/"{PROCESSNAME})?"["{NUMBER}"]: "{SOLARIS_MSGID_TAG}? {
         /* extract PID */
         yylval.num = getsyslogpid(yytext, yyleng);
         return SYSLOG_BANNER_PID;
         }
 
-({TIMESTAMP_SYSLOG}|{TIMESTAMP_ISO8601})[ ]+{FACLEVEL}?[ ]*([a-zA-Z0-9]|{WORD}|{HOSTADDR})[ ]+({PROCESSNAME}("/"{PROCESSNAME})?":")?   { return SYSLOG_BANNER; }
+({TIMESTAMP_SYSLOG}|{TIMESTAMP_ISO8601})[ ]+{FACLEVEL}?[ ]*([a-zA-Z0-9]|{WORD}|{HOSTADDR})[ ]+{RFC3164}?[ ]*({PROCESSNAME}("/"{PROCESSNAME})?":")?   { return SYSLOG_BANNER; }
 
 
  /* syslog style  "last message repeated N times" */
